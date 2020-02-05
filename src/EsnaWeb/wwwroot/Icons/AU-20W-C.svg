@@ -1,0 +1,33 @@
+<svg width="370" height="460" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="462" width="372" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect stroke="#444444" id="svg_2" height="80" width="80" y="100" x="10" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_3" height="80" width="80" y="190" x="10" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_11" height="80" width="80" y="10" x="10" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_12" height="80" width="80" y="280" x="10" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_13" height="80" width="80" y="370" x="9.038462" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_38" height="80" width="80" y="100" x="100" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_39" height="80" width="80" y="190" x="100" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_40" height="80" width="80" y="10" x="100" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_41" height="80" width="80" y="280" x="100" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_42" height="80" width="80" y="370" x="100" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_43" height="80" width="80" y="100" x="190" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_44" height="80" width="80" y="190" x="190" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_45" height="80" width="80" y="10" x="190" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_46" height="80" width="80" y="280" x="190" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_47" height="80" width="80" y="370" x="190" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_48" height="80" width="80" y="100" x="280" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_49" height="80" width="80" y="190" x="280" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_50" height="80" width="80" y="10" x="280" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_51" height="80" width="80" y="280" x="280" stroke-width="0" fill="#666666"/>
+  <rect stroke="#444444" id="svg_52" height="80" width="80" y="370" x="280" stroke-width="0" fill="#666666"/>
+ </g>
+</svg>

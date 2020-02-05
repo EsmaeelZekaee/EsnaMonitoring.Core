@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "sevenSeg.js@0.2.0",
+      "destination": "wwwroot/css/sevenSeg.js/"
+    },
+    {
+      "library": "jquery@3.4.1",
+      "destination": "wwwroot/css/jquery/",
+      "files": [
+        "jquery.min.js"
+      ]
+    },
+    {
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/css/jqueryui/"
+    }
+  ]
+}

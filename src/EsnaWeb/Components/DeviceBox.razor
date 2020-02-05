@@ -1,0 +1,56 @@
+﻿@inject IJSRuntime JSRuntime;
+<article class="container device ">
+    <div class="box @Device.Code.ToLower()">
+        <div>
+            @if (Device is AUDevice aUDevice && aUDevice?.Data.Any() == true)
+            {
+                @*<span class="badge badge-pill badge-success">@aUDevice.Data.Count(x => x == 1)</span>
+                    <span class="badge badge-pill badge-warning">@aUDevice.Data.Count(x => x == 2)</span>
+                    <div style="float:none;margin:10px auto;">
+                        <span style="font-size:48px" class="oi oi-grid-three-up"></span>
+                    </div>*@
+            }
+            else if (Device is TPIDevice tPIDevice && tPIDevice?.Data.Any() == true)
+            {
+
+            }
+        </div>
+        <div class="title">
+            @Device.Code
+        </div>
+    </div>
+</article>
+@code {
+    [Parameter]
+    public ModBusDevice Device { get; set; }
+
+    private int? GetSize() => Device?.Data?.Length;
+
+    protected override void OnParametersSet()
+    {
+        if (Device != null)
+        {
+            Device.PropertyChanged += PropertyChanged;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (Device != null)
+            Device.PropertyChanged += PropertyChanged;
+    }
+
+    private async void PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        await InvokeAsync(() =>
+        {
+            try
+            {
+                base.StateHasChanged();
+            }
+            catch (Exception)
+            {
+            }
+        });
+    }
+}

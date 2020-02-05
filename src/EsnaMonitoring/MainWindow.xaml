@@ -1,0 +1,117 @@
+﻿<Window x:Class="EsnaMonitoring.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:e="clr-namespace:EsnaMonitoring"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Unloaded="Window_Unloaded"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+     
+    </Window.Resources>
+    <DockPanel VerticalAlignment="Stretch" LastChildFill="True" HorizontalAlignment="Stretch">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="{Binding ElementName=rightSide, Path=Width}"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" FontSize="40"  >ESNA</TextBlock>
+            <TextBlock Grid.Column="1" FontSize="36"  >Home</TextBlock>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="20"></ColumnDefinition>
+                <ColumnDefinition x:Name="rightSide" Width="5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="6">
+                <GridSplitter.Template>
+                    <ControlTemplate TargetType="{x:Type GridSplitter}">
+                        <Grid>
+                            <Button Content="⁞" />
+                            <Rectangle Fill="#00FFFFFF" />
+                        </Grid>
+                    </ControlTemplate>
+                </GridSplitter.Template>
+            </GridSplitter>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="35"></ColumnDefinition>
+                        <ColumnDefinition Width="35"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Padding="5">
+                        <TextBlock FontFamily="WebDings"></TextBlock>
+                    </Button>
+                    <Button Grid.Column="1" Padding="5">
+                        <TextBlock FontFamily="WebDings"></TextBlock>
+                    </Button>
+                    <Label Grid.Column="2"></Label>
+                </Grid>
+                <StackPanel  Grid.Row="1"  Orientation="Vertical">
+                    <RadioButton  GroupName="RootItem">Home</RadioButton>
+                    <Expander Header="All Devices"  Foreground="#FFFFFFFF">
+                        <StackPanel  x:Name="mnDevices">
+                            <RadioButton GroupName="DeiveItem">Device</RadioButton>
+                        </StackPanel>
+                    </Expander>
+                    <RadioButton GroupName="RootItem">Settings</RadioButton>
+                <!--<Menu  >
+                    <Menu.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </Menu.ItemsPanel>
+                        <MenuItem Header="Home" Click="HomeMenuItem_Click"></MenuItem>
+                    </Menu>
+                <Expander Header="All Devices"  Foreground="#FFFFFFFF">
+                    <Menu x:Name="mnDevices"   >
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                    </Menu>
+                </Expander>
+                    <Menu  >
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <MenuItem Header="Settings" Click="SettingsMenuItem_Click"></MenuItem>
+                    </Menu>-->
+                </StackPanel>
+            </Grid>
+            <TabControl Grid.Column="2" TabStripPlacement="Left" Name="tbControl">
+                <TabControl.Resources>
+                    
+                </TabControl.Resources>
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+                <TabItem Header="Help">
+                    <ScrollViewer   HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                        <WrapPanel  Name="wpDevices"  >
+                        </WrapPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem>
+                    <TextBlock>Settings</TextBlock>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>

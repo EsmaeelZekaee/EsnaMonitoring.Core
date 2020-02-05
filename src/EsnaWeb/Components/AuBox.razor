@@ -1,0 +1,43 @@
+﻿<span class="alarm alarm-@GetSize()">
+    @for (int i = 0; i < GetSize(); i++)
+    {
+        <span class="window">
+            <span class="bolt color-@Device.Data[i]">&nbsp;</span>
+        </span>
+    }
+</span>
+@code {
+    [Parameter]
+    public AUDevice Device { get; set; }
+
+    private int? GetSize() => Device?.Data?.Length;
+
+    protected override void OnParametersSet()
+    {
+        if (Device != null)
+        {
+            Device.PropertyChanged += PropertyChanged;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (Device != null)
+            Device.PropertyChanged += PropertyChanged;
+    }
+
+    private async void PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        await InvokeAsync(() =>
+        {
+            try
+            {
+                base.StateHasChanged();
+
+            }
+            catch (Exception)
+            {
+            }
+        });
+    }
+}
