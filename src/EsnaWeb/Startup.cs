@@ -1,29 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using EsnaMonitoring.Services.Factories;
-using MacAddressGenerator;
-using EsnaMonitoring.Services.Configuations.IO;
-using EsnaMonitoring.Services.Services.Modbus;
-using EsnaMonitoring.Services.Fakes;
-using EsnaMonitoring.Services.Configuations;
-using EsnaData.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using EsnaData.Repositories;
-using EsnaMonitoring.Services.Services.Databse;
-using System.Text.Json;
-using System.IO;
-
 namespace EsnaWeb
 {
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using EsnaMonitoring.Services.Factories;
+    using MacAddressGenerator;
+    using EsnaMonitoring.Services.Configuations.IO;
+    using EsnaMonitoring.Services.Services.Modbus;
+    using EsnaMonitoring.Services.Configuations;
+    using EsnaData.DbContexts;
+    using Microsoft.EntityFrameworkCore;
+    using EsnaMonitoring.Services.Services.Data;
+    using EsnaData.Repositories.Interfaces;
+    using Autofac;
+    using Autofac.Extensions.DependencyInjection;
+    using EsnaMonitoring.Services.Services.Data.Interfaces;
+    using EsnaData.Entities;
+    using EsnaMonitoring.Hubs;
+    using EsnaMonitoring.Services.Fakes;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -37,25 +34,21 @@ namespace EsnaWeb
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var container = new ContainerBuilder();
+            container.Populate(services);
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<IModbusControlFactory, FakeModbusControlFactory>();
-            services.AddSingleton<IMacAddressService, MacAddressService>();
-            services.AddSingleton<IFileReader, FileReader>();
-            services.AddSingleton<IModbusService, ModbusService>();
-            services.AddSingleton<IDeviceFactory, DeviceFactory>();
-            services.AddSingleton<TimerService>();
-            services.AddHostedService<DatabaseListener>();
-            services.AddSingleton<RecordeUpdaterService>();
-            services.AddScoped<ConfigorationRepository>();
-            services.AddScoped<DeviceRepository>();
-            services.AddScoped<RecordeRepository>();
-            services.AddScoped<DataService>();
+
+            // register hosted service
+            services.AddHostedService<DeviceCollectorHostedSerive>();
+
+            // add signalR
             services.AddSignalR();
+
+            // add DbContext
             services.AddDbContext<EsnaDbContext>(options =>
               options.UseSqlite(Configuration.GetConnectionString("EsnaDatabase")));
-
-            services.AddHostedService<TimerHostedService>();
 
             var builder = new ConfigurationBuilder().Build();
 
@@ -63,11 +56,38 @@ namespace EsnaWeb
             {
                 x.OUI = "07-AA-AA";
             });
-
             services.AddOptions<HardwareInterfaceConfig>().Configure((x) =>
             {
                 x.PortName = "COM3";
             });
+        }
+
+        // this method add for register with autofac
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            // Register repositories
+
+            builder.RegisterAssemblyTypes(typeof(IBaseRepository<,>).Assembly)
+                .Where(x => x.Name.EndsWith("Repository"))
+                .AsImplementedInterfaces();
+                //.InstancePerRequest();
+
+            // Register Modbus service
+            builder.RegisterType<FakeModbusControlFactory>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<MacAddressService>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<FileReader>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ModbusService>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<DeviceFactory>().AsImplementedInterfaces().SingleInstance();
+         
+            builder.RegisterType<EntityService<Device>>().AsImplementedInterfaces();
+            builder.RegisterType<EntityService<Configuration>>().AsImplementedInterfaces();
+            builder.RegisterType<EntityService<Command>>().AsImplementedInterfaces();
+            builder.RegisterType<EntityService<Recorde>>().AsImplementedInterfaces();
+
+            // Register Log Service
+            builder.RegisterType<ModeBusLogReaderService>().As<IModeBusLogReaderService>();
+            builder.RegisterType<ModBusLogWriterService>().As<IModBusLogWriterService>().SingleInstance();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,13 +107,12 @@ namespace EsnaWeb
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-          
+
             app.UseEndpoints(endpoints =>
             {
-
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<ModbusHub>("/modbusHub");
-               // endpoints.MapFallbackToClientSideBlazor<Program>("index.html");
+                // endpoints.MapFallbackToClientSideBlazor<Program>("index.html");
             });
 
             app.UseEndpoints(endpoints =>

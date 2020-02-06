@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.SignalR.Client
 @page "/"
 @inject NavigationManager NavigationManager
-@inject TimerService TimerService;
 @inject IServiceProvider ServiceProvider;
 <div class="devices">
     @{
@@ -20,20 +19,6 @@
 
     Dictionary<string, ModBusDevice> devices { get; set; }
 
-    //private (int row, int cols) GetRowsAndCols(int windows)
-    //{
-    //    var sums = new List<(int row, int col, int sum)>();
-    //    for (var i = 1; i <= windows / 2; i++)
-    //    {
-
-    //        if (windows % i == 0)
-    //        {
-    //            sums.Add((windows / i, i, windows / i + i));
-    //        }
-    //    }
-    //    return sums.OrderBy(x => x.sum).Select(x => (x.row, x.col)).First();
-    //}
-
     protected override async Task OnInitializedAsync()
     {
         devices = new Dictionary<string, ModBusDevice>();
@@ -41,14 +26,13 @@
            .WithUrl(NavigationManager.ToAbsoluteUri("/modbusHub"))
            .Build();
 
-        hubConnection.On<byte, string, string, short[]>("SendMessage", (unitId, code, macAddress, data) =>
+        hubConnection.On<Device>("EntityUpdated", (device) =>
         {
-            var modBusDevice = ModBusDevice.CreateDevice(unitId, code, macAddress);
+            var modBusDevice = ModBusDevice.CreateDevice(device.UnitId, device.Code, device.MacAddress);
             if (devices.ContainsKey(modBusDevice.MacAddress) == false)
             {
                 devices[modBusDevice.MacAddress] = modBusDevice;
             }
-            devices[modBusDevice.MacAddress].Data = data;
             try
             {
                 base.StateHasChanged();
@@ -58,8 +42,15 @@
             }
         });
 
+       hubConnection.On<BaseEntity<long>>("EntityAdded", (recorde) =>
+       {
+
+       });
+
+          hubConnection.On("OnMessage", () =>
+       {
+
+       });
         await hubConnection.StartAsync();
     }
-
-
 }

@@ -3,10 +3,12 @@ using EsnaData.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using EsnaData.Repositories.Interfaces;
 
 namespace EsnaData.Repositories
 {
-    public class RecordeRepository : BaseRepository<Recorde, long>
+    public class RecordeRepository :
+        BaseRepository<Recorde, long>, IRecordeRepository
     {
         public RecordeRepository(EsnaDbContext dbContext) : base(dbContext)
         {

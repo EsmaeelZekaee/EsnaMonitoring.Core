@@ -1,4 +1,4 @@
-﻿namespace EsnaMonitoring.Services.Services.DistributedRandom
+﻿namespace EsnaMonitoring.Services.Services.DistributedRandom.Interfaces
 {
     public interface IDistributedRandomNumberGenerator<T>
         where T : struct

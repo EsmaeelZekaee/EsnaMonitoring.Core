@@ -1,5 +1,4 @@
 using EsnaMonitoring.Services.Configuations;
-using System;
 using Xunit;
 
 namespace EsnaMonitor.Services.Test

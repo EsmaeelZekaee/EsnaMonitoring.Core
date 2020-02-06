@@ -3,7 +3,6 @@ using EsnaMonitoring.Services.Factories;
 using MacAddressGenerator;
 using Microsoft.Extensions.Options;
 using ModbusUtility;
-using System.Threading.Tasks;
 
 namespace EsnaMonitoring.Services.Fakes
 {

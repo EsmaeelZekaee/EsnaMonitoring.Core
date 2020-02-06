@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EsnaMonitoring.Services.Services.DistributedRandom
+﻿namespace EsnaMonitoring.Services.Services.DistributedRandom
 {
+    using EsnaMonitoring.Services.Services.DistributedRandom.Interfaces;
+    using System;
+    using System.Collections.Generic;
     public class DistributedRandomNumberGenerator<T> : IDistributedRandomNumberGenerator<T>
         where T : struct, IComparable<T>, IConvertible
     {

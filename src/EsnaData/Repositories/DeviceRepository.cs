@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EsnaData.DbContexts;
 using EsnaData.Entities;
 using Microsoft.EntityFrameworkCore;
+using EsnaData.Repositories.Interfaces;
+
 namespace EsnaData.Repositories
 {
-    public class DeviceRepository : BaseRepository<Device, long>
+    public class DeviceRepository : BaseRepository<Device, long>, IDeviceRepository
     {
         public DeviceRepository(EsnaDbContext dbContext) : base(dbContext)
         {
@@ -34,10 +35,9 @@ namespace EsnaData.Repositories
 
         }
 
-        public async Task<IEnumerable<Device>> GetActiveDevicesAsync()
+        public IAsyncEnumerable<Device> GetActiveDevicesAsync()
         {
-            await Task.CompletedTask;
-            var list = DbContext.Devices.Include(x => x.Recordes).Where(x => x.IsActive).Select(x => new Device
+            return DbContext.Devices.Where(x => x.IsActive).Select(x => new Device
             {
                 Id = x.Id,
                 IsActive = x.IsActive,
@@ -46,9 +46,19 @@ namespace EsnaData.Repositories
                 CreatedOnUtc = x.CreatedOnUtc,
                 MacAddress = x.MacAddress,
                 ExteraInfornamtion = x.ExteraInfornamtion,
-                Recordes = x.Recordes.ToList()
-            }).ToList();
-            return list;
+            }).AsAsyncEnumerable();
+        }
+
+        public IAsyncEnumerable<Recorde> GetLatestRecordsAsync()
+        {
+            return DbContext.Recordes.Include(x => x.Device).Where(x => x.Device.IsActive).Select(x => new Recorde
+            {
+                Id = x.Id,
+                CreatedOnUtc = x.CreatedOnUtc,
+                DeviceId = x.DeviceId,
+                Data = x.Data,
+                Device = x.Device
+            }).AsAsyncEnumerable();
         }
 
         public async ValueTask ResetStatusAsync()

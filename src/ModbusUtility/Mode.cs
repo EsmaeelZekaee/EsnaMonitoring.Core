@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace ModbusUtility
+﻿namespace ModbusUtility
 {
-	/// <summary>
-	/// Specifies the modbus mode for a ModbusMasterLib object.
-	/// </summary>
-	
-	public enum Mode
+    /// <summary>
+    /// Specifies the modbus mode for a ModbusMasterLib object.
+    /// </summary>
+
+    public enum Mode
 	{
 		/// <summary>
 		/// Modbus RTU Mode.

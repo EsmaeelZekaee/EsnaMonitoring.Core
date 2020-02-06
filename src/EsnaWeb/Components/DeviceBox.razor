@@ -4,11 +4,8 @@
         <div>
             @if (Device is AUDevice aUDevice && aUDevice?.Data.Any() == true)
             {
-                @*<span class="badge badge-pill badge-success">@aUDevice.Data.Count(x => x == 1)</span>
-                    <span class="badge badge-pill badge-warning">@aUDevice.Data.Count(x => x == 2)</span>
-                    <div style="float:none;margin:10px auto;">
-                        <span style="font-size:48px" class="oi oi-grid-three-up"></span>
-                    </div>*@
+            <span>@(aUDevice.Data.Count(x=>x == 0))</span>
+
             }
             else if (Device is TPIDevice tPIDevice && tPIDevice?.Data.Any() == true)
             {

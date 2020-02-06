@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace ModbusUtility
+﻿namespace ModbusUtility
 {
-	
-	internal class ByteAccess
+
+    internal class ByteAccess
 	{
 		
 		public static byte HI4BITS(byte n)

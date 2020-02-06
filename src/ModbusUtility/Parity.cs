@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace ModbusUtility
+﻿namespace ModbusUtility
 {
-	/// <summary>
-	///    Specifies the parity bit for a ModbusMasterLib object.
-	/// </summary>
-	
-	public enum Parity
+    /// <summary>
+    ///    Specifies the parity bit for a ModbusMasterLib object.
+    /// </summary>
+
+    public enum Parity
 	{
 		/// <summary>
 		/// No parity check occurs.

@@ -1,6 +1,4 @@
-﻿using MacAddressGenerator;
-using ModbusUtility;
-using System.Threading.Tasks;
+﻿using ModbusUtility;
 
 namespace EsnaMonitoring.Services.Factories
 {

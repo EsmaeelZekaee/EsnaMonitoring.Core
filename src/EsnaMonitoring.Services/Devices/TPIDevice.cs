@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EsnaMonitoring.Services.Devices

@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace ModbusUtility
+﻿namespace ModbusUtility
 {
-	
-	internal class Ascii
+
+    internal class Ascii
 	{
 		
 		public static byte Num2Ascii(byte nNum)

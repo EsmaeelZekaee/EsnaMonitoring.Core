@@ -8,10 +8,6 @@ using System.Linq;
 
 namespace MacAddressGenerator
 {
-    public interface IMacAddressService
-    {
-        string Generate();
-    }
 
     public class MacAddressService : IMacAddressService
     {

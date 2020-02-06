@@ -1,15 +1,14 @@
 ﻿using EsnaData.DbContexts;
 using EsnaData.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using EsnaData.Repositories.Interfaces;
+using System.Collections.Generic;
 
 namespace EsnaData.Repositories
 {
-    public class BaseRepository<TEntity, Tkey>
-        where TEntity : BaseEntity<Tkey>
+    public class BaseRepository<TEntity, Tkey> :
+        IBaseRepository<TEntity, Tkey> where TEntity : BaseEntity<Tkey>
     {
         protected EsnaDbContext DbContext { get; set; }
         public BaseRepository(EsnaDbContext dbContext)
@@ -45,5 +44,15 @@ namespace EsnaData.Repositories
             return DbContext.Set<TEntity>();
         }
 
+        public async ValueTask UpdateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            DbContext.UpdateRange(entities);
+            await DbContext.SaveChangesAsync();
+        }
+
+        public Task SaveChangesAsync()
+        {
+            return DbContext.SaveChangesAsync();
+        }
     }
 }

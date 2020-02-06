@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EsnaMonitoring.Services.Devices
+﻿namespace EsnaMonitoring.Services.Devices
 {
     public static class DeviceNames
     {

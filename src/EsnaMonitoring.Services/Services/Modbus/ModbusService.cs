@@ -1,15 +1,12 @@
-﻿using EsnaMonitoring.Services.Devices;
-using EsnaMonitoring.Services.Factories;
-using MacAddressGenerator;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using ModbusUtility;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace EsnaMonitoring.Services.Services.Modbus
+﻿namespace EsnaMonitoring.Services.Services.Modbus
 {
+    using EsnaMonitoring.Services.Devices;
+    using EsnaMonitoring.Services.Factories;
+    using EsnaMonitoring.Services.Services.Modbus.Interfaces;
+    using ModbusUtility;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class ModbusService : IModbusService
     {
