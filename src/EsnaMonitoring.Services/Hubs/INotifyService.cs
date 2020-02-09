@@ -7,9 +7,9 @@ namespace EsnaMonitoring.Hubs
     public interface INotifyService
     {
         Task OnMessage();
-        Task EntityAdded(BaseEntity<long> entity);
-        Task EntityUpdated(BaseEntity<long> entity);
-        Task EntityRemoved(BaseEntity<long> entity);
-        Task AnErrorOccurredOnEntity<TEntity>(string emthodName, Exception exception, TEntity entity) where TEntity : BaseEntity<long>;
+        Task EntityAdded(string entity, string type);
+        Task EntityUpdated(string entity, string type);
+        Task EntityRemoved(string entity, string type);
+        Task AnErrorOccurredOnEntity(string emthodName, Exception exception, string entity, string type);
     }
 }

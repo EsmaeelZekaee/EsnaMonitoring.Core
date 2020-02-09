@@ -49,8 +49,16 @@ namespace EsnaMonitoring.Services.Services.Data
 
             await foreach (var item in devices)
             {
-                
-                var device = await _deviceService.FirstOrDefault(x => x.MacAddress == x.MacAddress) ??
+                var macAddress = item.MacAddress;
+                var device = await _deviceService.FirstOrDefault(x => x.MacAddress == macAddress).ContinueWith(x =>
+               {
+                   if (x.IsFaulted)
+                   {
+
+                   }
+                   return x;
+               }).GetAwaiter().GetResult();
+                device = device ??
                    new Device()
                    {
                        FirstRegister = item.FirstRegister,
@@ -70,7 +78,7 @@ namespace EsnaMonitoring.Services.Services.Data
 
         public async Task UpdateAsync()
         {
-            
+
             foreach (var item in ModBusDevices)
             {
                 short[] data = await _modBusService.UpdateDeviceAsync(item.UnitId, item.FirstRegister, item.Offset);
@@ -99,7 +107,7 @@ namespace EsnaMonitoring.Services.Services.Data
             }
         }
 
-      
+
         public ModBusLogWriterService(IServiceProvider serviceProvider)
         {
             _scope = serviceProvider.CreateScope();

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace EsnaData.Entities
 {
@@ -44,12 +46,13 @@ namespace EsnaData.Entities
 
         public string ExteraInfornamtion { get; set; }
 
+        [JsonIgnore]
         public IList<Recorde> Recordes { get; set; }
 
 
     }
 
-  
+
 
     [Table(nameof(Recorde))]
     public class Recorde : BaseEntity<long>
@@ -60,7 +63,7 @@ namespace EsnaData.Entities
 
         public byte[] Data { get; set; }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public short[] ShortData
         {
             get
@@ -94,5 +97,16 @@ namespace EsnaData.Entities
         public T Id { get; set; }
 
         public DateTime CreatedOnUtc { get; set; }
+
+
+    }
+
+    public static class BaseEntityExtentions
+    {
+        public static string AsJson<T>(this T entity)
+            where T : BaseEntity<long>
+        {
+            return JsonSerializer.Serialize(entity, new JsonSerializerOptions() { });
+        }
     }
 }

@@ -54,7 +54,7 @@
                             $"Executed on {DateTime.Now} successfully.");
 
                 });
-                Thread.Sleep(3000);
+                Thread.Sleep(100);
             }
         }
     }

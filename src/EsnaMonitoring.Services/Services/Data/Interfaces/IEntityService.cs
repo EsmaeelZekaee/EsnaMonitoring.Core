@@ -13,7 +13,7 @@ namespace EsnaMonitoring.Services.Services.Data.Interfaces
         
         ValueTask<TEntity> Find(long id);
         
-        ValueTask<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> expression = null);
+        Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> expression = null);
         
         IAsyncEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression);
         

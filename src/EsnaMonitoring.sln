@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacAddressGenerator", "MacA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EsnaWeb", "EsnaWeb\EsnaWeb.csproj", "{D5A48ED2-8BC0-485D-815D-51E0F564EFD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsnaData", "EsnaData\EsnaData.csproj", "{8DD4606C-064F-42C8-BF3F-3290BB422FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EsnaData", "EsnaData\EsnaData.csproj", "{8DD4606C-064F-42C8-BF3F-3290BB422FCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

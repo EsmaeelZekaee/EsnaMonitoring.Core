@@ -7,17 +7,13 @@
         foreach (var item in devices)
         {
             <DeviceBox @key="@item" Device="item.Value" />
-            if (item.Value.Model == ModBusDevice.DeviceModel.Au)
-            {
-                <span>@((item.Value as AUDevice).Data.Count(x => x == 0));</span>
-            }
         }
     }
 </div>
 @code{
     HubConnection hubConnection;
 
-    Dictionary<string, ModBusDevice> devices { get; set; }
+    Dictionary<string, ModBusDevice> devices;
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,15 +38,21 @@
             }
         });
 
-       hubConnection.On<BaseEntity<long>>("EntityAdded", (recorde) =>
-       {
+        hubConnection.On<string, string>("EntityAdded", (json, type) =>
+        {
+            var entity = System.Text.Json.JsonSerializer.Deserialize(json, Type.GetType(type));
+            if (entity is EsnaData.Entities.Recorde record)
+            {
+                if (devices.ContainsKey(record.Device.MacAddress) == false)
+                {
+                    devices.Add(record.Device.MacAddress, ModBusDevice.CreateDevice(record.Device.UnitId, record.Device.Code, record.Device.MacAddress));
+                    base.StateHasChanged();
+                }
 
-       });
+                devices[record.Device.MacAddress].Data = record.ShortData;
+            }
 
-          hubConnection.On("OnMessage", () =>
-       {
-
-       });
+        });
         await hubConnection.StartAsync();
     }
 }

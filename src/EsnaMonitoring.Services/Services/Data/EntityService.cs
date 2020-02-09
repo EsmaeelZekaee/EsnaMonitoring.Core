@@ -30,11 +30,11 @@ namespace EsnaMonitoring.Services.Services.Data
             try
             {
                 await _repository.InsertAsync(entity);
-                await _notify.Clients.All.EntityAdded(entity);
+                await _notify.Clients.All.EntityAdded(entity.AsJson(), typeof(TEntity).AssemblyQualifiedName);
             }
             catch (System.Exception e)
             {
-                await _notify.Clients.All.AnErrorOccurredOnEntity(nameof(Add), e, entity);
+                await _notify.Clients.All.AnErrorOccurredOnEntity(nameof(Add), e, entity.AsJson(), typeof(TEntity).AssemblyQualifiedName);
             }
             return entity;
         }
@@ -44,11 +44,11 @@ namespace EsnaMonitoring.Services.Services.Data
             try
             {
                 await _repository.UpdateAsync(entity);
-                await _notify.Clients.All.EntityUpdated(entity);
+                await _notify.Clients.All.EntityUpdated(entity.AsJson(), typeof(TEntity).AssemblyQualifiedName);
             }
             catch (System.Exception e)
             {
-                await _notify.Clients.All.AnErrorOccurredOnEntity(nameof(Add), e, entity);
+                await _notify.Clients.All.AnErrorOccurredOnEntity(nameof(Add), e, entity.AsJson(), typeof(TEntity).AssemblyQualifiedName);
             }
             return entity;
         }
@@ -58,11 +58,11 @@ namespace EsnaMonitoring.Services.Services.Data
             try
             {
                 await _repository.RemoveAsync(entity);
-                await _notify.Clients.All.EntityRemoved(entity);
+                await _notify.Clients.All.EntityRemoved(entity.AsJson(), typeof(TEntity).AssemblyQualifiedName);
             }
             catch (System.Exception e)
             {
-                await _notify.Clients.All.AnErrorOccurredOnEntity(nameof(Add), e, entity);
+                await _notify.Clients.All.AnErrorOccurredOnEntity(nameof(Add), e, entity.AsJson(), typeof(TEntity).AssemblyQualifiedName);
             }
         }
 
@@ -71,10 +71,15 @@ namespace EsnaMonitoring.Services.Services.Data
             return _repository.GetAll().Where(expression).AsAsyncEnumerable();
         }
 
-        public virtual async ValueTask<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> expression = null)
+        public virtual Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> expression = null)
         {
+            var q = _repository.GetAll();
 
-            return await (expression == null ? _repository.GetAll().Where(expression).FirstAsync() : _repository.GetAll().FirstOrDefaultAsync());
+            if (expression != null)
+            {
+                q = q.Where(expression);
+            }
+            return q.FirstOrDefaultAsync();
         }
 
 
