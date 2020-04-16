@@ -17,15 +17,16 @@
     <script src="~/css/jquery/jquery.min.js"></script>
     <script src="~/css/jqueryui/jquery-ui.min.js"></script>
     <script src="~/css/sevenSeg.js/sevenSeg.min.js"></script>
+    <script src="~/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         window.seg7 = function (e, v, d, c1, c2, s) {
             $(e).sevenSeg({
-                value:v,
-                digits:d|3,
-                colorOff:c1|"red",
-                colorOn:c2|"black",
-                slant:s|1,
-                decimalPlaces:1,
+                value: v,
+                digits: d | 3,
+                colorOff: c1 | "red",
+                colorOn: c2 | "black",
+                slant: s | 1,
+                decimalPlaces: 1,
             });
         }
     </script>

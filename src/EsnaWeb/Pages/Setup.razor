@@ -1,0 +1,63 @@
+﻿@page  "/setup"
+@using  EsnaData.Entities;
+@inject IEntityService<Configuration> _configorationService
+<label for="configoration">Configoration</label>
+<div name="configoration" class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+        Select Configoration
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @foreach (Configuration item in _configorations)
+        {
+            <div class="dropdown-item">@(item)</div>
+        }
+        @if (_configorations.Any())
+        {
+            <div class="dropdown-divider"></div>
+        }
+        <div class="dropdown-item">Create new</div>
+
+
+    </div>
+    <EditForm Model="@_configoration" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <InputNumber id="name" @bind-Value="_configoration.Mode">
+            
+        </InputNumber>
+        <InputText id="name" @bind-Value="_configoration.PortName" />
+        <InputSelect id="name" @bind-Value="_configoration.StopBits" />
+        <InputSelect id="name" @bind-Value="_configoration.Timeout" />
+        <InputSelect id="name" @bind-Value="_configoration.Parity" >
+            @foreach (var item in Enum.GetNames(typeof(System.IO.Ports.Parity)))
+            {
+                <option @key="item" value="item">item</option>
+            }
+        </InputSelect>
+
+        <button type="submit">Submit</button>
+    </EditForm>
+</div>
+@code {
+    Configuration _configoration;
+    List<Configuration> _configorations;
+    protected override async Task OnInitializedAsync()
+    {
+        
+        await base.OnInitializedAsync();
+        _configorations = new List<Configuration>();
+        await foreach (var item in _configorationService.GetAll())
+        {
+            _configorations.Add(item);
+        };
+
+    }
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("OnValidSubmit");
+    }
+
+}

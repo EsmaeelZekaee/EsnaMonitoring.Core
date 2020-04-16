@@ -16,6 +16,17 @@
     {
       "library": "jqueryui@1.12.1",
       "destination": "wwwroot/css/jqueryui/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "bootstrap@4.4.1",
+      "destination": "wwwroot/bootstrap/",
+      "files": [
+        "dist/js/bootstrap.bundle.min.js",
+        "dist/js/bootstrap.bundle.min.js.map",
+        "dist/js/bootstrap.min.js.map",
+        "dist/js/bootstrap.min.js"
+      ]
     }
   ]
 }

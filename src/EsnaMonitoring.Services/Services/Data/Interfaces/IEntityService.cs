@@ -15,7 +15,7 @@ namespace EsnaMonitoring.Services.Services.Data.Interfaces
         
         Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> expression = null);
         
-        IAsyncEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression);
+        IAsyncEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression = null);
         
         ValueTask<TEntity> Update(TEntity entity);
         

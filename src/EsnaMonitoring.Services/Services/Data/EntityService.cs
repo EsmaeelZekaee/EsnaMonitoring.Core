@@ -68,7 +68,7 @@ namespace EsnaMonitoring.Services.Services.Data
 
         public virtual IAsyncEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression)
         {
-            return _repository.GetAll().Where(expression).AsAsyncEnumerable();
+            return (expression == null ? _repository.GetAll() : _repository.GetAll().Where(expression)).AsAsyncEnumerable();
         }
 
         public virtual Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> expression = null)
