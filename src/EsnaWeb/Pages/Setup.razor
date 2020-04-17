@@ -1,63 +1,143 @@
 ﻿@page  "/setup"
-@using  EsnaData.Entities;
-@inject IEntityService<Configuration> _configorationService
-<label for="configoration">Configoration</label>
-<div name="configoration" class="dropdown">
-    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
-        Select Configoration
-        <span class="caret"></span>
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        @foreach (Configuration item in _configorations)
-        {
-            <div class="dropdown-item">@(item)</div>
-        }
-        @if (_configorations.Any())
-        {
-            <div class="dropdown-divider"></div>
-        }
-        <div class="dropdown-item">Create new</div>
+@using AutoMapper
+@inject IEntityService<Configuration> ConfigurationService
+@inject IConfigurationFactory  ConfigurationFactory
+@inject IMapper  Mapper
+<EditForm EditContext="@_editContext" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="@_displaySummary" />
+    <p class="form-group row">
+        <label class="col-sm-2 col-form-label" for="mode">
+            Mode
+        </label>
+        <div div class="col-sm-10">
+            <InputSelectNumber class="form-control" id="mode" @bind-Value="_configuration.Mode">
+                @foreach (var item in EsnaMonitoring.Services.Factories.ConfigurationFactory.Modes)
+                {
+                    <option value="@item">@item</option>
+                }
+            </InputSelectNumber>
+        </div>
+    </p>
 
+    <p class="form-group row">
+        <label class="col-sm-2 col-form-label" for="portName">
+            Port Name
+        </label>
+        <div div class="col-sm-10">
+            <InputSelect class="form-control" id="portName" @bind-Value="_configuration.PortName">
+                @foreach (var item in EsnaMonitoring.Services.Factories.ConfigurationFactory.PortNames)
+                {
+                    <option></option>
+                    <option value="@item">@item</option>
+                }
+            </InputSelect>
+        </div>
+    </p>
 
-    </div>
-    <EditForm Model="@_configoration" OnValidSubmit="HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <p class="form-group row">
+        <label class="col-sm-2 col-form-label" for="stopBits">
+            Stop Bits
+        </label>
+        <div div class="col-sm-10">
+            <InputSelectNumber class="form-control" id="stopBits" @bind-Value="_configuration.StopBits">
+                @foreach (var item in EsnaMonitoring.Services.Factories.ConfigurationFactory.StopBitses)
+                {
+                    <option value="@item">@item</option>
+                }
+            </InputSelectNumber>
+        </div>
+    </p>
 
-        <InputNumber id="name" @bind-Value="_configoration.Mode">
-            
-        </InputNumber>
-        <InputText id="name" @bind-Value="_configoration.PortName" />
-        <InputSelect id="name" @bind-Value="_configoration.StopBits" />
-        <InputSelect id="name" @bind-Value="_configoration.Timeout" />
-        <InputSelect id="name" @bind-Value="_configoration.Parity" >
-            @foreach (var item in Enum.GetNames(typeof(System.IO.Ports.Parity)))
-            {
-                <option @key="item" value="item">item</option>
-            }
-        </InputSelect>
+    <p class="form-group row">
+        <label class="col-sm-2 col-form-label" for="dataBits">
+            Data Bits
+        </label>
+        <div div class="col-sm-10">
+            <InputSelectNumber class="form-control" id="dataBits" @bind-Value="_configuration.DataBits">
+                @foreach (var item in EsnaMonitoring.Services.Factories.ConfigurationFactory.DataBitses)
+                {
+                    <option value="@item">@item</option>
+                }
+            </InputSelectNumber>
+        </div>
+    </p>
 
-        <button type="submit">Submit</button>
-    </EditForm>
-</div>
+    <p class="form-group row">
+        <label class="col-sm-2 col-form-label" for="parity">
+            Parity
+        </label>
+        <div div class="col-sm-10">
+            <InputSelectNumber class="form-control" id="parity" @bind-Value="_configuration.Parity">
+                @foreach (var item in EsnaMonitoring.Services.Factories.ConfigurationFactory.Parities)
+                {
+                    <option value="@item">@item</option>
+                }
+            </InputSelectNumber>
+        </div>
+    </p>
+
+    <p class="form-group row">
+        <label class="col-sm-2 col-form-label" for="timeout">
+            Timeout
+        </label>
+        <div div class="col-sm-10">
+            <InputSelectNumber class="form-control" id="timeout" @bind-Value="_configuration.Timeout">
+                @foreach (var item in EsnaMonitoring.Services.Factories.ConfigurationFactory.Timeouts)
+                {
+
+                    <option value="@item">@(EnumExtension.GetEnumDisplay<Timeout>(item))</option>
+                }
+            </InputSelectNumber>
+        </div>
+    </p>
+    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</EditForm>
+
 @code {
-    Configuration _configoration;
-    List<Configuration> _configorations;
+    private ConfigurationModel _configuration;
+
+    private EditContext _editContext;
+
+    private bool _formInvalid = true;
+
+    private string _displaySummary;
+
     protected override async Task OnInitializedAsync()
     {
-        
+        _configuration = await ConfigurationFactory.GetConfigurationAsync();
+        _editContext = new EditContext(_configuration);
+        _displaySummary = string.Empty;
         await base.OnInitializedAsync();
-        _configorations = new List<Configuration>();
-        await foreach (var item in _configorationService.GetAll())
-        {
-            _configorations.Add(item);
-        };
-
+        _editContext.OnFieldChanged += HandleFieldChanged;
     }
 
-    private void HandleValidSubmit()
+    private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
     {
-        Console.WriteLine("OnValidSubmit");
+        _formInvalid = !_editContext.Validate();
+        StateHasChanged();
     }
+
+    private async Task HandleValidSubmit()
+    {
+        if (_formInvalid)
+            _displaySummary = "display:block";
+
+        var configurationEntity = await ConfigurationService.FindAsync(_configuration.Id);
+
+        if (configurationEntity == null)
+        {
+            configurationEntity = new Configuration();
+        }
+
+        configurationEntity = Mapper.Map(_configuration, configurationEntity);
+        if (configurationEntity.Id == 0)
+            await ConfigurationService.AddAsync(configurationEntity);
+        else
+            await ConfigurationService.UpdateAsync(configurationEntity);
+
+        await ConfigurationService.SaveChangesAsync();
+    }
+
 
 }

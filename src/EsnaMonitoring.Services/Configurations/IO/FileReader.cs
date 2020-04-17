@@ -15,6 +15,7 @@ namespace EsnaMonitoring.Services.Configuations.IO
         {
             return await File.ReadAllTextAsync(PathHelper.GetPath(path));
         }
+
         public Task WriteAllText(string path, string text)
         {
             File.WriteAllText(PathHelper.GetPath(path), text);

@@ -1,41 +1,68 @@
 ﻿#nullable enable
-using System;
-using System.ComponentModel;
-using System.Text.RegularExpressions;
-
 namespace EsnaMonitoring.Services.Devices
 {
+    using System;
+    using System.ComponentModel;
+    using System.Text.RegularExpressions;
+
     public abstract class ModBusDevice : INotifyPropertyChanged
     {
-        public const int MinAddress = 1;
         public const int MaxAddress = 247;
 
+        public const int MinAddress = 1;
 
         private static int _lastId;
+
         private short[]? _data;
-
-        public abstract byte FirstRegister { get; }
-
-        public abstract byte Offset { get; }
-
 
         protected ModBusDevice(byte unitId, string code, string macAddress)
         {
-            Code = code;
-            UnitId = unitId;
-            Id = ++_lastId;
-            MacAddress = macAddress;
+            this.Code = code;
+            this.UnitId = unitId;
+            this.Id = ++_lastId;
+            this.MacAddress = macAddress;
         }
 
-        public int Id { get; }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public byte UnitId { get; protected set; }
+        public enum DeviceModel
+        {
+            Unknown,
+
+            Tpi,
+
+            Au
+        }
 
         public string? Code { get; protected set; }
 
+        public short[] Data
+        {
+            get
+            {
+                if (this._data == null)
+                    return Array.Empty<short>();
+                return this._data;
+            }
+
+            set
+            {
+                this._data = value;
+                this.NotifyPropertyChanged(nameof(this.Data));
+            }
+        }
+
+        public abstract byte FirstRegister { get; }
+
+        public int Id { get; }
+
         public string? MacAddress { get; protected set; }
 
-        public DeviceModel Model => GetModel(Code);
+        public DeviceModel Model => GetModel(this.Code);
+
+        public abstract byte Offset { get; }
+
+        public byte UnitId { get; protected set; }
 
         public static ModBusDevice CreateDevice(byte unitId, string code, string macAddress)
         {
@@ -49,6 +76,12 @@ namespace EsnaMonitoring.Services.Devices
                     throw new Exception($"Invalid code {code}.");
             }
         }
+
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private static DeviceModel GetModel(string? code)
         {
             if (string.IsNullOrEmpty(code))
@@ -57,37 +90,11 @@ namespace EsnaMonitoring.Services.Devices
 
             if (match.Success)
             {
-                Enum.TryParse<DeviceModel>(match.Groups[1].Value, ignoreCase: true, out var value);
+                Enum.TryParse<DeviceModel>(match.Groups[1].Value, true, out var value);
                 return value;
             }
+
             return DeviceModel.Unknown;
-        }
-
-        public short[] Data
-        {
-            get
-            {
-                if (_data == null)
-                    return Array.Empty<short>();
-                return _data;
-            }
-            set
-            {
-                _data = value;
-                NotifyPropertyChanged(nameof(Data));
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public enum DeviceModel
-        {
-            Unknown, Tpi, Au
         }
     }
 }

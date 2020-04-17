@@ -1,8 +1,9 @@
-﻿using EsnaData.Entities;
-using Microsoft.EntityFrameworkCore;
-
-namespace EsnaData.DbContexts
+﻿namespace EsnaData.DbContexts
 {
+    using EsnaData.Entities;
+
+    using Microsoft.EntityFrameworkCore;
+
     public class EsnaDbContext : DbContext
     {
         public EsnaDbContext(DbContextOptions options)
@@ -10,9 +11,12 @@ namespace EsnaData.DbContexts
         {
         }
 
-        public DbSet<Device> Devices { get; set; }
         public DbSet<Command> Commands { get; set; }
+
         public DbSet<Configuration> Configurations { get; set; }
+
+        public DbSet<Device> Devices { get; set; }
+
         public DbSet<Recorde> Recordes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,23 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace EsnaData.Migrations
+﻿namespace EsnaData.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class Init1 : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsActive",
-                table: "Device",
-                nullable: false,
-                defaultValue: false);
-        }
-
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsActive",
-                table: "Device");
+            migrationBuilder.DropColumn("IsActive", "Device");
+        }
+
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<bool>("IsActive", "Device", nullable: false, defaultValue: false);
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using EsnaData.Entities;
-
-namespace EsnaData.Repositories.Interfaces
+﻿namespace EsnaData.Repositories.Interfaces
 {
+    using EsnaData.Entities;
+
     public interface ICommandRepository : IBaseRepository<Command, long>
     {
-
     }
 }

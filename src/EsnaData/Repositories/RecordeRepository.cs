@@ -1,22 +1,25 @@
-﻿using EsnaData.DbContexts;
-using EsnaData.Entities;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-using EsnaData.Repositories.Interfaces;
-
-namespace EsnaData.Repositories
+﻿namespace EsnaData.Repositories
 {
-    public class RecordeRepository :
-        BaseRepository<Recorde, long>, IRecordeRepository
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using EsnaData.DbContexts;
+    using EsnaData.Entities;
+    using EsnaData.Repositories.Interfaces;
+
+    using Microsoft.EntityFrameworkCore;
+
+    public class RecordeRepository : BaseRepository<Recorde, long>, IRecordeRepository
     {
-        public RecordeRepository(EsnaDbContext dbContext) : base(dbContext)
+        public RecordeRepository(EsnaDbContext dbContext)
+            : base(dbContext)
         {
         }
 
         public async ValueTask<Recorde> GetLatest(long deviceId)
         {
-            return await DbContext.Set<Recorde>().Where(x => x.DeviceId == deviceId).OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+            return await this.DbContext.Set<Recorde>().Where(x => x.DeviceId == deviceId).OrderByDescending(x => x.Id)
+                       .FirstOrDefaultAsync();
         }
     }
 }

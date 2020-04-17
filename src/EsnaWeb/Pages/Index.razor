@@ -1,5 +1,7 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client
-@page "/"
+﻿@page "/"
+@using System.Text.Json
+@using Microsoft.AspNetCore.SignalR.Client
+@inject IConfigurationFactory ConfigurationFactory
 @inject NavigationManager NavigationManager
 @inject IServiceProvider ServiceProvider;
 <div class="devices">
@@ -10,49 +12,59 @@
         }
     }
 </div>
+<div class="fixed-bottom">
+    <div class="status-bar">
+        Port: @_configurationModel.PortName | BaudRate: @_configurationModel.BaudRate | Mode: @_configurationModel.Mode | StopBits: @_configurationModel.StopBits | Parity: @_configurationModel.Parity
+    </div>
+</div>
 @code{
-    HubConnection hubConnection;
+    private HubConnection _hubConnection;
+    private ConfigurationModel _configurationModel;
 
     Dictionary<string, ModBusDevice> devices;
 
     protected override async Task OnInitializedAsync()
     {
+        _configurationModel = ConfigurationFactory.GetConfiguration();
+
         devices = new Dictionary<string, ModBusDevice>();
-        hubConnection = new HubConnectionBuilder()
-           .WithUrl(NavigationManager.ToAbsoluteUri("/modbusHub"))
-           .Build();
+        _hubConnection = new HubConnectionBuilder().WithUrl(NavigationManager.ToAbsoluteUri("/modbusHub")).Build();
 
-        hubConnection.On<Device>("EntityUpdated", (device) =>
-        {
-            var modBusDevice = ModBusDevice.CreateDevice(device.UnitId, device.Code, device.MacAddress);
-            if (devices.ContainsKey(modBusDevice.MacAddress) == false)
-            {
-                devices[modBusDevice.MacAddress] = modBusDevice;
-            }
-            try
-            {
-                base.StateHasChanged();
-            }
-            catch (Exception)
-            {
-            }
-        });
 
-        hubConnection.On<string, string>("EntityAdded", (json, type) =>
-        {
-            var entity = System.Text.Json.JsonSerializer.Deserialize(json, Type.GetType(type));
-            if (entity is EsnaData.Entities.Recorde record)
+
+        _hubConnection.On<Device>("EntityUpdated", device =>
             {
-                if (devices.ContainsKey(record.Device.MacAddress) == false)
+                var modBusDevice = ModBusDevice.CreateDevice(device.UnitId, device.Code, device.MacAddress);
+                if (devices.ContainsKey(modBusDevice.MacAddress) == false)
                 {
-                    devices.Add(record.Device.MacAddress, ModBusDevice.CreateDevice(record.Device.UnitId, record.Device.Code, record.Device.MacAddress));
-                    base.StateHasChanged();
+                    devices[modBusDevice.MacAddress] = modBusDevice;
                 }
 
-                devices[record.Device.MacAddress].Data = record.ShortData;
-            }
+                try
+                {
+                    StateHasChanged();
+                }
+                catch (Exception)
+                {
+                }
+            });
 
-        });
-        await hubConnection.StartAsync();
+        _hubConnection.On<string, string>("EntityAdded", (json, type) =>
+            {
+                var entity = JsonSerializer.Deserialize(json, Type.GetType(type));
+                if (entity is Recorde record)
+                {
+                    if (devices.ContainsKey(record.Device.MacAddress) == false)
+                    {
+                        devices.Add(record.Device.MacAddress, ModBusDevice.CreateDevice(record.Device.UnitId, record.Device.Code, record.Device.MacAddress));
+                        StateHasChanged();
+                    }
+
+                    devices[record.Device.MacAddress].Data = record.ShortData;
+                }
+            });
+        await _hubConnection.StartAsync();
     }
+
+
 }

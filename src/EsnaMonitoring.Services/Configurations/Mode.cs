@@ -3,14 +3,13 @@
     public enum Mode
     {
         /// <summary>
-        /// Modbus RTU Mode.
+        ///     Modbus RTU Mode.
         /// </summary>
-
         RTU,
-        /// <summary>
-        /// Modbus ASCII Mode.
-        /// </summary>
 
+        /// <summary>
+        ///     Modbus ASCII Mode.
+        /// </summary>
         ASCII
     }
 }

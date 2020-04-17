@@ -5,9 +5,10 @@ namespace EsnaMonitoring.Services.Configuations.IO
 
     public interface IFileReader
     {
-
         bool Exists(string path);
+
         Task<string?> ReadAllText(string path);
+
         Task WriteAllText(string path, string text);
     }
 }

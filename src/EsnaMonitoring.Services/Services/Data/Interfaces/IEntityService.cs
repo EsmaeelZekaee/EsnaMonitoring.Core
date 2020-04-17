@@ -1,25 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
-namespace EsnaMonitoring.Services.Services.Data.Interfaces
+﻿namespace EsnaMonitoring.Services.Services.Data.Interfaces
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
     public interface IEntityService<TEntity>
     {
-        ValueTask<TEntity> Add(TEntity entity);
+        ValueTask<TEntity> AddAsync(TEntity entity);
 
-        Task Removed(TEntity entity);
-        
-        ValueTask<TEntity> Find(long id);
-        
-        Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> expression = null);
-        
-        IAsyncEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression = null);
-        
-        ValueTask<TEntity> Update(TEntity entity);
-        
-        ValueTask UpdateRange(IEnumerable<TEntity> entities);
+        ValueTask<TEntity> FindAsync(long id);
+
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null);
+        TEntity FirstOrDefault(Expression<Func<TEntity, bool>> expression = null);
+
+        IAsyncEnumerable<TEntity> GetAllAsync(Expression<Func<TEntity, bool>> expression = null);
+
+        Task RemovedAsync(TEntity entity);
+
         Task SaveChangesAsync();
+
+        ValueTask<TEntity> UpdateAsync(TEntity entity);
+
+        ValueTask UpdateRangeAsync(IEnumerable<TEntity> entities);
     }
 }

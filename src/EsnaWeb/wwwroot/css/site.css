@@ -9,21 +9,21 @@ a, .btn-link {
 }
 
 .btn-primary {
-    color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
+    color: #fff;
 }
 
 app {
-    position: relative;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .top-row {
-    height: 3.5rem;
-    display: flex;
     align-items: center;
+    display: flex;
+    height: 3.5rem;
 }
 
 .main {
@@ -37,8 +37,8 @@ app {
     }
 
         .main .top-row > a, .main .top-row .btn-link {
-            white-space: nowrap;
             margin-left: 1.5rem;
+            white-space: nowrap;
         }
 
         .main .top-row a:first-child {
@@ -51,7 +51,7 @@ app {
 }
 
     .sidebar .top-row {
-        background-color: rgba(0,0,0,0.4);
+        background-color: rgba(0, 0, 0, 0.4);
     }
 
     .sidebar .navbar-brand {
@@ -59,10 +59,10 @@ app {
     }
 
     .sidebar .oi {
-        width: 2rem;
         font-size: 1.1rem;
-        vertical-align: text-top;
         top: -2px;
+        vertical-align: text-top;
+        width: 2rem;
     }
 
     .sidebar .nav-item {
@@ -79,21 +79,21 @@ app {
         }
 
         .sidebar .nav-item a {
-            color: #d7d7d7;
-            border-radius: 4px;
-            height: 3rem;
-            display: flex;
             align-items: center;
+            border-radius: 4px;
+            color: #d7d7d7;
+            display: flex;
+            height: 3rem;
             line-height: 3rem;
         }
 
             .sidebar .nav-item a.active {
-                background-color: rgba(255,255,255,0.25);
+                background-color: rgba(255, 255, 255, 0.25);
                 color: white;
             }
 
             .sidebar .nav-item a:hover {
-                background-color: rgba(255,255,255,0.1);
+                background-color: rgba(255, 255, 255, 0.1);
                 color: white;
             }
 
@@ -151,15 +151,20 @@ app {
 }
 
 @media (min-width: 768px) {
+
+    .status-bar {
+        margin-left: 250px;
+    }
+
     app {
         flex-direction: row;
     }
 
     .sidebar {
-        width: 250px;
         height: 100vh;
         position: sticky;
         top: 0;
+        width: 250px;
     }
 
     .main .top-row {
@@ -192,61 +197,61 @@ app {
         position: relative;
     }
 
-@media(max-width:240px) {
+@media (max-width: 240px) {
     .devices .container.device {
-        width: 50%;
         padding-top: 50%; /* 16:9 Aspect Ratio */
+        width: 50%;
     }
 }
 
-@media(max-width:480px) {
+@media (max-width: 480px) {
     .devices .container.device {
-        width: 40%;
         padding-top: 40%; /* 16:9 Aspect Ratio */
+        width: 40%;
     }
 }
 
-@media(max-width:768px) {
+@media (max-width: 768px) {
     .devices .container.device {
-        width: 20%;
         padding-top: 20%; /* 16:9 Aspect Ratio */
+        width: 20%;
     }
 }
 
-@media(max-width:1366px) {
+@media (max-width: 1366px) {
     .devices .container.device {
-        width: 15%;
         padding-top: 15%; /* 16:9 Aspect Ratio */
+        width: 15%;
     }
 }
 
 
 .devices .container.device .box {
-    position: absolute;
-    margin: 6px;
-    top: 0;
-    left: 0;
     bottom: 0;
+    color: white;
+    font-size: 12px;
+    left: 0;
+    margin: 6px;
+    position: absolute;
     right: 0;
     text-align: center;
-    font-size: 12px;
-    color: white;
+    top: 0;
 }
 
     .devices .container.device .box .title {
         bottom: 0;
-        position: absolute;
-        margin: 2px 5px;
         left: 0;
+        margin: 2px 5px;
+        position: absolute;
         text-align: left;
     }
 
 .au-04w-2, .au-08w-2, .au-10w-2, .au-12w-2, .au-20w-2, .au-24w-c, .tpi-3-420-123 {
     background-color: #9a8f16;
-    background-size: cover;
-    background-size: auto 50%;
     background-position: center;
     background-repeat: no-repeat;
+    background-size: cover;
+    background-size: auto 50%;
 }
 
 .au-04w-2 {
@@ -287,10 +292,15 @@ app {
 }
 
 .box .icon {
-    position: absolute;
-    margin: 25%;
-    width: 50%;
-    height: 50%;
     content: ' ';
     font-size: 0 !important;
+    height: 50%;
+    margin: 25%;
+    position: absolute;
+    width: 50%;
+}
+
+.status-bar {
+    background: #d7d7d7;
+    padding-left: 5px;
 }

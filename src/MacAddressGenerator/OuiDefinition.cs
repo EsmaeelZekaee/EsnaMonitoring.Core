@@ -2,8 +2,8 @@
 {
     public class OuiDefinition
     {
-        public string Oui { get; set; }
-
         public string Manufacturer { get; set; }
+
+        public string Oui { get; set; }
     }
 }

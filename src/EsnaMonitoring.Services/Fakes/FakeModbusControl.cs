@@ -1,31 +1,47 @@
 ﻿#nullable enable
-using ModbusUtility;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace EsnaMonitoring.Services.Fakes
 {
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using ModbusUtility;
+
     public class FakeModbusControl : IModbusControl
     {
         private readonly FackeDevicesCollection _fackeDevicesCollection;
 
+        public FakeModbusControl(FackeDevicesCollection fackeDevicesCollection)
+        {
+            this._fackeDevicesCollection = fackeDevicesCollection;
+        }
+
         public int BaudRate { get; set; }
+
         public int DataBits { get; set; }
-        public Mode Mode { get; set; }
-        public Parity Parity { get; set; }
-        public string? PortName { get; set; }
-        public int ResponseTimeout { get; set; }
+
         public bool DTREnable { get; set; }
-        public bool RemoveEcho { get; set; }
-        public bool RTSEnable { get; set; }
-        public int StopBits { get; set; }
+
         public bool IsOpen { get; private set; }
+
+        public Mode Mode { get; set; }
+
+        public Parity Parity { get; set; }
+
+        public string? PortName { get; set; }
+
+        public bool RemoveEcho { get; set; }
+
+        public int ResponseTimeout { get; set; }
+
+        public bool RTSEnable { get; set; }
+
+        public int StopBits { get; set; }
 
         public void Close()
         {
-            IsOpen = false;
+            this.IsOpen = false;
         }
 
         public Result DetectDevice(byte unitId, out string name)
@@ -33,16 +49,11 @@ namespace EsnaMonitoring.Services.Fakes
             throw new NotImplementedException();
         }
 
-        public FakeModbusControl(FackeDevicesCollection fackeDevicesCollection)
-        {
-            _fackeDevicesCollection = fackeDevicesCollection;
-        }
-
         public ValueTask<DataResult<string>> DetectDeviceAsync(byte unitId)
         {
-            if (IsOpen == false)
+            if (this.IsOpen == false)
                 return new ValueTask<DataResult<string>>(new DataResult<string>(Result.ISCLOSED, null));
-            var result = _fackeDevicesCollection[unitId];
+            var result = this._fackeDevicesCollection[unitId];
 
             var dataResult = new DataResult<string>();
             if (result == null)
@@ -54,19 +65,13 @@ namespace EsnaMonitoring.Services.Fakes
                 dataResult.Result = Result.SUCCESS;
                 dataResult.Data = $"{result.Code};{result.MacAddress}";
             }
+
             return new ValueTask<DataResult<string>>(dataResult);
         }
 
         public void Dispose()
         {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool dispose)
-        {
-            if (!dispose)
-                return;
-            GC.SuppressFinalize(this);
+            this.Dispose(true);
         }
 
         public short[] FloatToRegisters(float value)
@@ -107,7 +112,7 @@ namespace EsnaMonitoring.Services.Fakes
         public ValueTask<Result> OpenAsync()
         {
             Thread.Sleep(500);
-            IsOpen = true;
+            this.IsOpen = true;
             return new ValueTask<Result>(Result.SUCCESS);
         }
 
@@ -126,7 +131,12 @@ namespace EsnaMonitoring.Services.Fakes
             throw new NotImplementedException();
         }
 
-        public Result ReadDiscreteInputs(byte unitId, ushort address, ushort quantity, bool[] discreteInputs, int offset)
+        public Result ReadDiscreteInputs(
+            byte unitId,
+            ushort address,
+            ushort quantity,
+            bool[] discreteInputs,
+            int offset)
         {
             throw new NotImplementedException();
         }
@@ -139,6 +149,14 @@ namespace EsnaMonitoring.Services.Fakes
         public Result ReadHoldingRegisters(byte unitId, ushort address, ushort quantity, short[] registers, int offset)
         {
             throw new NotImplementedException();
+        }
+
+        public ValueTask<DataResult<short[]>> ReadHoldingRegistersAsync(byte unitId, ushort address, ushort quantity)
+        {
+            if (this.IsOpen == false)
+                return new ValueTask<DataResult<short[]>>(new DataResult<short[]>(Result.ISCLOSED, null));
+            var data = this._fackeDevicesCollection.ReadData(unitId).ToArray();
+            return new ValueTask<DataResult<short[]>>(new DataResult<short[]>(Result.SUCCESS, data));
         }
 
         public Result ReadInputRegisters(byte unitId, ushort address, ushort quantity, short[] registers)
@@ -156,22 +174,46 @@ namespace EsnaMonitoring.Services.Fakes
             throw new NotImplementedException();
         }
 
-        public Result ReadUserDefinedCoils(byte unitId, byte function, ushort address, ushort quantity, bool[] coils, int offset)
+        public Result ReadUserDefinedCoils(
+            byte unitId,
+            byte function,
+            ushort address,
+            ushort quantity,
+            bool[] coils,
+            int offset)
         {
             throw new NotImplementedException();
         }
 
-        public Result ReadUserDefinedRegisters(byte unitId, byte function, ushort address, ushort quantity, short[] registers)
+        public Result ReadUserDefinedRegisters(
+            byte unitId,
+            byte function,
+            ushort address,
+            ushort quantity,
+            short[] registers)
         {
             throw new NotImplementedException();
         }
 
-        public Result ReadUserDefinedRegisters(byte unitId, byte function, ushort address, ushort quantity, short[] registers, int offset)
+        public Result ReadUserDefinedRegisters(
+            byte unitId,
+            byte function,
+            ushort address,
+            ushort quantity,
+            short[] registers,
+            int offset)
         {
             throw new NotImplementedException();
         }
 
-        public Result ReadWriteMultipleRegisters(byte unitId, ushort readAddress, ushort readQuantity, short[] readRegisters, ushort writeAddress, ushort writeQuantity, short[] writeRegisters)
+        public Result ReadWriteMultipleRegisters(
+            byte unitId,
+            ushort readAddress,
+            ushort readQuantity,
+            short[] readRegisters,
+            ushort writeAddress,
+            ushort writeQuantity,
+            short[] writeRegisters)
         {
             throw new NotImplementedException();
         }
@@ -206,7 +248,12 @@ namespace EsnaMonitoring.Services.Fakes
             throw new NotImplementedException();
         }
 
-        public Result WriteMultipleRegisters(byte unitId, ushort address, ushort quantity, short[] registers, int offset)
+        public Result WriteMultipleRegisters(
+            byte unitId,
+            ushort address,
+            ushort quantity,
+            short[] registers,
+            int offset)
         {
             throw new NotImplementedException();
         }
@@ -226,28 +273,43 @@ namespace EsnaMonitoring.Services.Fakes
             throw new NotImplementedException();
         }
 
-        public Result WriteUserDefinedCoils(byte unitId, byte function, ushort address, ushort quantity, bool[] coils, int offset)
+        public Result WriteUserDefinedCoils(
+            byte unitId,
+            byte function,
+            ushort address,
+            ushort quantity,
+            bool[] coils,
+            int offset)
         {
             throw new NotImplementedException();
         }
 
-        public Result WriteUserDefinedRegisters(byte unitId, byte function, ushort address, ushort quantity, short[] registers)
+        public Result WriteUserDefinedRegisters(
+            byte unitId,
+            byte function,
+            ushort address,
+            ushort quantity,
+            short[] registers)
         {
             throw new NotImplementedException();
         }
 
-        public Result WriteUserDefinedRegisters(byte unitId, byte function, ushort address, ushort quantity, short[] registers, int offset)
+        public Result WriteUserDefinedRegisters(
+            byte unitId,
+            byte function,
+            ushort address,
+            ushort quantity,
+            short[] registers,
+            int offset)
         {
             throw new NotImplementedException();
         }
 
-        public ValueTask<DataResult<short[]>> ReadHoldingRegistersAsync(byte unitId, ushort address, ushort quantity)
+        protected virtual void Dispose(bool dispose)
         {
-            if (IsOpen == false)
-                return new ValueTask<DataResult<short[]>>(new DataResult<short[]>(Result.ISCLOSED, null));
-            var data = _fackeDevicesCollection.ReadData(unitId).ToArray();
-            return new ValueTask<DataResult<short[]>>(new DataResult<short[]>(Result.SUCCESS, data));
-
+            if (!dispose)
+                return;
+            GC.SuppressFinalize(this);
         }
     }
 }

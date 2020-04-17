@@ -1,8 +1,9 @@
-using EsnaMonitoring.Services.Configuations;
-using Xunit;
-
 namespace EsnaMonitor.Services.Test
 {
+    using EsnaMonitoring.Services.Configuations;
+
+    using Xunit;
+
     public class HardwareInterfaceConfigProviderTest
     {
         [Fact]

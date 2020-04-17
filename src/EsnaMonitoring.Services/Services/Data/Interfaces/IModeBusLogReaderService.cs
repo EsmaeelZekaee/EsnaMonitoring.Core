@@ -1,9 +1,10 @@
-﻿using EsnaMonitoring.Services.Devices;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace EsnaMonitoring.Services.Services.Data.Interfaces
+﻿namespace EsnaMonitoring.Services.Services.Data.Interfaces
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using EsnaMonitoring.Services.Devices;
+
     public interface IModeBusLogReaderService
     {
         Task<IEnumerable<ModBusDevice>> GetDevicesAsync();

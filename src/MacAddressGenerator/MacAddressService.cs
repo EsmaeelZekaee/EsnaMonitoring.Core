@@ -1,21 +1,21 @@
-﻿using CsvHelper;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace MacAddressGenerator
+﻿namespace MacAddressGenerator
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+
+    using CsvHelper;
+
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
 
     public class MacAddressService : IMacAddressService
     {
         private static readonly Random Random = new Random();
 
-        private readonly ILogger<MacAddressService> logger;
-
         private readonly Config configuration;
+
+        private readonly ILogger<MacAddressService> logger;
 
         public MacAddressService(ILogger<MacAddressService> logger, IOptions<Config> configuration)
         {
@@ -26,49 +26,51 @@ namespace MacAddressGenerator
 
         public string Generate()
         {
-            string mac = GetRandomMacAddress();
+            var mac = this.GetRandomMacAddress();
 
             return mac;
         }
 
+        private static OuiDefinition GetRandomOui()
+        {
+            var embeddedFile = typeof(MacAddressService).Assembly.GetEmbeddedResource("oui.csv");
+
+            using (var reader = new StreamReader(embeddedFile))
+            using (var csv = new CsvReader(reader))
+            {
+                csv.Configuration.HasHeaderRecord = false;
+
+                var definitions = csv.GetRecords<OuiDefinition>().ToList();
+
+                var index = Random.Next(0, definitions.Count - 1);
+
+                return definitions.ElementAt(index);
+            }
+        }
+
         private string GetRandomMacAddress()
         {
-            byte[] buffer = new byte[3];
+            var buffer = new byte[3];
 
-            string ouiPrefix = configuration.OUI;
+            var ouiPrefix = this.configuration.OUI;
 
             if (string.IsNullOrWhiteSpace(ouiPrefix))
             {
-                OuiDefinition definition = GetRandomOui();
+                var definition = GetRandomOui();
 
-                logger.LogInformation($"Using '{definition.Oui}' for manufacturer '{definition.Manufacturer}' as Organizationally Unique Identifier (OUI)");
+                this.logger.LogInformation(
+                    $"Using '{definition.Oui}' for manufacturer '{definition.Manufacturer}' as Organizationally Unique Identifier (OUI)");
 
                 ouiPrefix = $"{definition.Oui}";
             }
             else
             {
-                logger.LogInformation($"Using custom OUI {ouiPrefix}");
+                this.logger.LogInformation($"Using custom OUI {ouiPrefix}");
             }
+
             Random.NextBytes(buffer);
 
             return $"{ouiPrefix}:{BitConverter.ToString(buffer)}".Replace("-", ":");
-        }
-
-        private static OuiDefinition GetRandomOui()
-        {
-            Stream embeddedFile = typeof(MacAddressService).Assembly.GetEmbeddedResource("oui.csv");
-
-            using (StreamReader reader = new StreamReader(embeddedFile))
-            using (CsvReader csv = new CsvReader(reader))
-            {
-                csv.Configuration.HasHeaderRecord = false;
-
-                List<OuiDefinition> definitions = csv.GetRecords<OuiDefinition>().ToList();
-
-                int index = Random.Next(0, definitions.Count - 1);
-
-                return definitions.ElementAt(index);
-            }
         }
     }
 }

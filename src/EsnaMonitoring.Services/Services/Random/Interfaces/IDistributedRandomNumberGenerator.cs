@@ -4,7 +4,7 @@
         where T : struct
     {
         void AddNumber(T value, double distribution);
-        T GetDistributedRandomNumber();
 
+        T GetDistributedRandomNumber();
     }
 }

@@ -1,7 +1,7 @@
-﻿using ModbusUtility;
-
-namespace EsnaMonitoring.Services.Factories
+﻿namespace EsnaMonitoring.Services.Factories
 {
+    using ModbusUtility;
+
     public interface IModbusControlFactory
     {
         public IModbusControl Create();

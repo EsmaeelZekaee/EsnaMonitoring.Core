@@ -1,58 +1,60 @@
-﻿using EsnaData.DbContexts;
-using EsnaData.Entities;
-using System.Linq;
-using System.Threading.Tasks;
-using EsnaData.Repositories.Interfaces;
-using System.Collections.Generic;
-
-namespace EsnaData.Repositories
+﻿namespace EsnaData.Repositories
 {
-    public class BaseRepository<TEntity, Tkey> :
-        IBaseRepository<TEntity, Tkey> where TEntity : BaseEntity<Tkey>
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using EsnaData.DbContexts;
+    using EsnaData.Entities;
+    using EsnaData.Repositories.Interfaces;
+
+    public class BaseRepository<TEntity, Tkey> : IBaseRepository<TEntity, Tkey>
+        where TEntity : BaseEntity<Tkey>
     {
-        protected EsnaDbContext DbContext { get; set; }
         public BaseRepository(EsnaDbContext dbContext)
         {
-            DbContext = dbContext;
+            this.DbContext = dbContext;
         }
 
-        public async ValueTask InsertAsync(TEntity entity)
-        {
-            await DbContext.AddAsync(entity);
-            await DbContext.SaveChangesAsync();
-        }
+        protected EsnaDbContext DbContext { get; set; }
 
-        public async ValueTask UpdateAsync(TEntity entity)
+        public IQueryable<TEntity> GetAll()
         {
-            DbContext.Update(entity);
-            await DbContext.SaveChangesAsync();
-        }
-
-        public async ValueTask RemoveAsync(TEntity entity)
-        {
-            DbContext.Remove(entity);
-            await DbContext.SaveChangesAsync();
+            return this.DbContext.Set<TEntity>();
         }
 
         public async ValueTask<TEntity> GetAsync(Tkey id)
         {
-            return await DbContext.FindAsync<TEntity>(id);
+            return await this.DbContext.FindAsync<TEntity>(id);
         }
 
-        public IQueryable<TEntity> GetAll()
+        public async ValueTask InsertAsync(TEntity entity)
         {
-            return DbContext.Set<TEntity>();
+            await this.DbContext.AddAsync(entity);
+            await this.DbContext.SaveChangesAsync();
         }
 
-        public async ValueTask UpdateRangeAsync(IEnumerable<TEntity> entities)
+        public async ValueTask RemoveAsync(TEntity entity)
         {
-            DbContext.UpdateRange(entities);
-            await DbContext.SaveChangesAsync();
+            this.DbContext.Remove(entity);
+            await this.DbContext.SaveChangesAsync();
         }
 
         public Task SaveChangesAsync()
         {
-            return DbContext.SaveChangesAsync();
+            return this.DbContext.SaveChangesAsync();
+        }
+
+        public async ValueTask UpdateAsync(TEntity entity)
+        {
+            this.DbContext.Update(entity);
+            await this.DbContext.SaveChangesAsync();
+        }
+
+        public async ValueTask UpdateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            this.DbContext.UpdateRange(entities);
+            await this.DbContext.SaveChangesAsync();
         }
     }
 }

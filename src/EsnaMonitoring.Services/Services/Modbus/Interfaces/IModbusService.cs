@@ -1,14 +1,16 @@
 ﻿namespace EsnaMonitoring.Services.Services.Modbus.Interfaces
 {
-    using EsnaMonitoring.Services.Devices;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using EsnaMonitoring.Services.Devices;
+
     public interface IModbusService : IDisposable
     {
-        void Disconnect();
-
         Task ConnectAsync();
+
+        void Disconnect();
 
         IAsyncEnumerable<ModBusDevice> GetDevicesAsync();
 

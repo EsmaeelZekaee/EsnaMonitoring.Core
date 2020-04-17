@@ -1,7 +1,7 @@
-﻿using EsnaMonitoring.Services.Devices;
-
-namespace EsnaMonitoring.Services.Factories
+﻿namespace EsnaMonitoring.Services.Factories
 {
+    using EsnaMonitoring.Services.Devices;
+
     public interface IDeviceFactory
     {
         ModBusDevice CreateDevice(byte address, string codeAndSerial);

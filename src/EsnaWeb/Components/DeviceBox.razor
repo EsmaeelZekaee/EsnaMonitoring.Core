@@ -4,12 +4,10 @@
         <div>
             @if (Device is AUDevice aUDevice && aUDevice?.Data.Any() == true)
             {
-            <span>@(aUDevice.Data.Count(x=>x == 0))</span>
-
+                <span>@(aUDevice.Data.Count(x => x == 0))</span>
             }
             else if (Device is TPIDevice tPIDevice && tPIDevice?.Data.Any() == true)
             {
-
             }
         </div>
         <div class="title">
@@ -17,11 +15,15 @@
         </div>
     </div>
 </article>
+
 @code {
     [Parameter]
     public ModBusDevice Device { get; set; }
 
-    private int? GetSize() => Device?.Data?.Length;
+    private int? GetSize()
+    {
+        return Device?.Data?.Length;
+    }
 
     protected override void OnParametersSet()
     {
@@ -40,14 +42,16 @@
     private async void PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         await InvokeAsync(() =>
-        {
-            try
             {
-                base.StateHasChanged();
-            }
-            catch (Exception)
-            {
-            }
-        });
+                try
+                {
+                    StateHasChanged();
+                }
+                catch (Exception)
+                {
+                }
+            });
     }
+
+
 }
